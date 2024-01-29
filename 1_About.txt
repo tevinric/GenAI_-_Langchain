@@ -1,0 +1,1 @@
+This is the repo for the Udemy course "Learn Langchain" Build #22 LLM Apps using OpenAI and Llama 2
