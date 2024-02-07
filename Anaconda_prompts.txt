@@ -1,0 +1,5 @@
+#Install a conda package
+conda install -c conda-forge XXX
+
+#Activate a conda envinronment from powershell
+conda activate env-name
