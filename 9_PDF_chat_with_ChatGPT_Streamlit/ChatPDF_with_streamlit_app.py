@@ -12,9 +12,9 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter # For splitting text into chunks
 import os
 import threading
+import dill
 
-
-os.environ['OPENAI_API_KEY'] = "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"
+os.environ['OPENAI_API_KEY'] = "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"
 
 def main():
     st.header('Chat with your PDF')
@@ -55,17 +55,19 @@ def main():
         os.chdir(change_path)
         st.write(os.getcwd())
         
-        if os.path.exists(f"{store_name}.pkl"):
-            with open(f"{store_name}.pickle", 'rb') as f:
-                VectorStore = pickle.load(f)
-            st.write("Embeddings loaded from the Disk")
+        load_path = os.getcwd()+'\\'+str(store_name)
+        st.write(load_path)
+        
+        if os.path.exists(load_path):
+            VectorStore = FAISS.load_local(load_path,OpenAIEmbeddings())
+            st.write('Loaded Locally')
         else:
             embeddings = OpenAIEmbeddings()
             VectorStore = FAISS.from_texts(chunks, embeddings)
-            with open(f"{store_name}.pickle", 'wb') as f:
-                pickle.dump(VectorStore, f)
-            st.write('Embeddings Created')
-            
+            save_path = str(os.getcwd()+'\\'+str(store_name))
+            st.write(save_path)
+            VectorStore.save_local(save_path)
+            st.write('Saved_locally')
         # Create an input for the user query
         query = st.text_input("Ask Question from your PDF file")
         #query = 'What is the paper about?'
